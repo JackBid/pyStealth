@@ -55,7 +55,9 @@ clock = pygame.time.Clock()
 
 # get board from .txt and convert to sprites
 board = readBoardFromFile('res/boards/board.txt')
-walls = generateWalls(board)
+top = 0
+boardScreen = board[:15]
+walls = generateWalls(boardScreen)
 
 # create player
 player = Player(100, 100)
@@ -90,6 +92,13 @@ while running:
                 player.changespeed(0, 4)
             elif event.key == pygame.K_s:
                 player.changespeed(0, -4)
+
+    if player.rect.y > 500:
+        boardScreen = board[0+top:top+15]
+        walls = generateWalls(boardScreen)
+        top += 1
+        player.rect.y = 500
+
     
     
     # Update
