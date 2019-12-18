@@ -4,20 +4,37 @@ from pygame.sprite import *
 class Player(Sprite):
     def __init__(self, x, y): # constructor
         Sprite.__init__(self)
+        self.dx = 0
+        self.dy = 0
         self.velocity = 4
-        self.image =  Surface((40, 40))
+        self.image = Surface((40, 40))
         self.rect = Rect(x, y, 40, 40)
 
-    def update(self, keys):
-        
-        if keys[pygame.K_w]: 
-            self.rect.y -= self.velocity
+    def changespeed(self, x, y):
+        self.dx += x
+        self.dy += y
+ 
 
-        if keys[pygame.K_a]: 
-            self.rect.x -= self.velocity
-
-        if keys[pygame.K_s]: 
-            self.rect.y += self.velocity
+    def update(self, walls):
         
-        if keys[pygame.K_d]: 
-            self.rect.x += self.velocity
+        self.rect.x += self.dx
+        
+        # Did moving left or right cause a collision?
+        block_hit_list = pygame.sprite.spritecollide(self, walls, False)
+        for block in block_hit_list:
+            if self.dx > 0:
+                self.rect.right = block.rect.left
+            else:
+                self.rect.left = block.rect.right
+        
+        self.rect.y += self.dy
+
+        # Did moving up or down cause a collision?
+        block_hit_list = pygame.sprite.spritecollide(self, walls, False)
+        for block in block_hit_list:
+            if self.dy > 0:
+                self.rect.bottom = block.rect.top
+            else:
+                self.rect.top = block.rect.bottom
+
+        

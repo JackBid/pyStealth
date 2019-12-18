@@ -48,9 +48,11 @@ clock = pygame.time.Clock()
 # get board from .txt and convert to sprites
 board = readBoardFromFile('res/boards/board.txt')
 walls = generateWalls(board)
-playerGroup = Group()
-playerGroup.add(Player(100,100))
 
+# create player
+player = Player(100, 100)
+playerGroup = Group()
+playerGroup.add(player)
 
 # the overall event loop
 while running:
@@ -60,11 +62,32 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                player.changespeed(-4, 0)
+            elif event.key == pygame.K_d:
+                player.changespeed(4, 0)
+            elif event.key == pygame.K_w:
+                player.changespeed(0, -4)
+            elif event.key == pygame.K_s:
+                player.changespeed(0, 4)
+ 
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_a:
+                player.changespeed(4, 0)
+            elif event.key == pygame.K_d:
+                player.changespeed(-4, 0)
+            elif event.key == pygame.K_w:
+                player.changespeed(0, 4)
+            elif event.key == pygame.K_s:
+                player.changespeed(0, -4)
     
-    keys = pygame.key.get_pressed()
     
     # Update
-    playerGroup.update(keys)
+    walls.update()
+    playerGroup.update(walls)
+    
 
     # Draw / render
     screen.fill((100, 100, 100))
