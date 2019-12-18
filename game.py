@@ -1,7 +1,7 @@
 from pygame import *
 from pygame.sprite import *
 
-from sprites.wall import Wall
+from sprites.wall import *
 from sprites.player import Player
 
 # 20 x 15
@@ -30,8 +30,16 @@ def generateWalls(board):
 
     for row in board:
         for item in row:
-            if item == 'w':
-                walls.add(Wall(x, y))
+            if item == '-':
+                walls.add(HorizontalWall(x, y))
+            elif item == '\\':
+                walls.add(VerticleWall(x, y))
+            elif item == '/':
+                walls.add(VerticleWall(x+32, y))
+            elif item == '[':
+                walls.add(LeftCornerWall(x, y))
+            elif item == ']':
+                walls.add(RightCornerWall(x, y))
             x += 40
         y += 40
         x = 0

@@ -7,8 +7,9 @@ class Player(Sprite):
         self.dx = 0
         self.dy = 0
         self.velocity = 4
-        self.image = Surface((40, 40))
-        self.rect = Rect(x, y, 40, 40)
+        self.image = image.load("res/sprites/player.png").convert()
+        self.image.set_colorkey((255, 255, 255))
+        self.rect = self.image.get_rect().move(x, y)
 
     def changespeed(self, x, y):
         self.dx += x
