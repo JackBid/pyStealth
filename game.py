@@ -1,51 +1,14 @@
 from pygame import *
 from pygame.sprite import *
 
-from sprites.wall import *
+from board import Board
+from sprites.walls import *
 from sprites.player import Player
 
 # 20 x 15
 WIDTH = 800
 HEIGHT = 600
 running = True
-
-def readBoardFromFile(path):
-    board = []
-    f = open(path, 'r')
-
-    text = f.readlines()
-    for line in text:
-        row = []
-        for char in line:
-            if char != '\n':
-                row.append(char)
-        board.append(row)
-    
-    return board
-
-def generateWalls(board):
-    y = 0
-    x = 0
-    walls = Group()
-
-    for row in board:
-        for item in row:
-            if item == '-':
-                walls.add(HorizontalWall(x, y))
-            elif item == '\\':
-                walls.add(VerticleWall(x, y))
-            elif item == '/':
-                walls.add(VerticleWall(x+32, y))
-            elif item == '[':
-                walls.add(LeftCornerWall(x, y))
-            elif item == ']':
-                walls.add(RightCornerWall(x, y))
-            x += 40
-        y += 40
-        x = 0
-    
-    return walls
-
 
 # pygame setup
 pygame.init()
@@ -54,10 +17,8 @@ display.set_caption("window title")
 clock = pygame.time.Clock()
 
 # get board from .txt and convert to sprites
-board = readBoardFromFile('res/boards/board.txt')
-top = 0
-boardScreen = board[:15]
-walls = generateWalls(boardScreen)
+board = Board('res/boards/board.txt')
+walls = board.generateWalls()
 
 # create player
 player = Player(100, 100)
@@ -93,12 +54,25 @@ while running:
             elif event.key == pygame.K_s:
                 player.changespeed(0, -4)
 
-    if player.rect.y > 500:
-        boardScreen = board[0+top:top+15]
-        walls = generateWalls(boardScreen)
-        top += 1
+    if player.rect.y < 0:
+        board.updatePositon('up')
+        walls = board.generateWalls()
+        player.rect.y = 50
+
+    if player.rect.y + 40 > 600:
+        board.updatePositon('down')
+        walls = board.generateWalls()
         player.rect.y = 500
 
+    if player.rect.x + 40 > 800:
+        board.updatePositon('right')
+        walls = board.generateWalls()
+        player.rect.x = 700
+
+    if player.rect.x < 0:
+        board.updatePositon('left')
+        walls = board.generateWalls()
+        player.rect.x = 100
     
     
     # Update
