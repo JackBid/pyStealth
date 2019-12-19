@@ -2,6 +2,7 @@ from pygame import *
 from pygame.sprite import *
 
 from sprites.walls import *
+from spritesheet import Spritesheet
 
 class Board():
 
@@ -27,15 +28,15 @@ class Board():
         for row in self.boardScreen:
             for item in row:
                 if item == '-':
-                    walls.add(HorizontalWall(x, y))
+                    walls.add(Wall(self.spritesheet, 'horizontal', x, y))
                 elif item == '\\':
-                    walls.add(VerticleWall(x, y))
+                    walls.add(Wall(self.spritesheet, 'verticle', x, y))
                 elif item == '/':
-                    walls.add(VerticleWall(x+32, y))
+                    walls.add(Wall(self.spritesheet, 'verticle', x+32, y))
                 elif item == '[':
-                    walls.add(LeftCornerWall(x, y))
+                    walls.add(Wall(self.spritesheet, 'left corner', x, y))
                 elif item == ']':
-                    walls.add(RightCornerWall(x, y))
+                    walls.add(Wall(self.spritesheet, 'right corner', x, y))
                 x += 40
             y += 40
             x = 0
@@ -75,3 +76,4 @@ class Board():
         self.leftIndex = 0
         self.boardScreen = self.board[self.topIndex:self.topIndex+15]
         self.boardScreen = self.adjustBoardScreenWidth()
+        self.spritesheet = Spritesheet("res/sprites/walls.png")

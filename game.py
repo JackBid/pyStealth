@@ -57,22 +57,22 @@ while running:
     if player.rect.y < 0:
         board.updatePositon('up')
         walls = board.generateWalls()
-        player.rect.y = 50
+        player.rect.y = 20
 
     if player.rect.y + 40 > 600:
         board.updatePositon('down')
         walls = board.generateWalls()
-        player.rect.y = 500
+        player.rect.y = 540
 
     if player.rect.x + 40 > 800:
         board.updatePositon('right')
         walls = board.generateWalls()
-        player.rect.x = 700
+        player.rect.x = 740
 
     if player.rect.x < 0:
         board.updatePositon('left')
         walls = board.generateWalls()
-        player.rect.x = 100
+        player.rect.x = 20
     
     
     # Update
