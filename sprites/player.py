@@ -7,8 +7,19 @@ class Player(Sprite):
         self.dx = 0
         self.dy = 0
         self.velocity = 4
-        self.image = image.load("res/sprites/player.png").convert()
-        self.image.set_colorkey((255, 255, 255))
+        self.leftImage = image.load('res/sprites/player_left.png').convert()
+        self.leftImage.set_colorkey((255,255,255))
+
+        self.rightImage = image.load("res/sprites/player_right.png").convert()
+        self.rightImage.set_colorkey((255,255,255))
+
+        self.frontImage = image.load('res/sprites/player_front.png').convert()
+        self.frontImage.set_colorkey((255,255,255))
+
+        self.backImage = image.load("res/sprites/player_back.png").convert()
+        self.backImage.set_colorkey((255,255,255))
+
+        self.image = self.leftImage
         self.rect = self.image.get_rect().move(x, y)
 
     def changespeed(self, x, y):

@@ -37,22 +37,30 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 player.changespeed(-4, 0)
+                player.image = player.leftImage
             elif event.key == pygame.K_d:
                 player.changespeed(4, 0)
+                player.image = player.rightImage
             elif event.key == pygame.K_w:
                 player.changespeed(0, -4)
+                player.image = player.backImage
             elif event.key == pygame.K_s:
                 player.changespeed(0, 4)
+                player.image = player.frontImage
  
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
                 player.changespeed(4, 0)
+               # player.image = player.frontImage
             elif event.key == pygame.K_d:
                 player.changespeed(-4, 0)
+                #player.image = player.frontImage
             elif event.key == pygame.K_w:
                 player.changespeed(0, 4)
+                player.image = player.frontImage
             elif event.key == pygame.K_s:
                 player.changespeed(0, -4)
+                player.image = player.frontImage
 
     if player.rect.y < 0:
         board.updatePositon('up')
