@@ -72,11 +72,13 @@ while running:
                 #player.image = player.frontImage
 
     walls = board.generateTiles(camera.x, camera.y)
- 
+
     # Update
     walls.update()
-    camera.update()
-    playerGroup.update(walls, camera.x, camera.y)
+    hit = player.update(walls, camera)
+
+    if not hit:
+        camera.update()
 
     # Draw / render
     screen.fill((100, 100, 100))

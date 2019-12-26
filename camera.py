@@ -4,6 +4,8 @@ class Camera:
         self.y = 0
         self.dx = 0
         self.dy = 0
+        self.minX = 0
+        self.minY = 0
         self.width = 800
         self.height = 600
     

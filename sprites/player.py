@@ -27,28 +27,31 @@ class Player(Sprite):
         self.dx += x
         self.dy += y
 
-    def update(self, walls, cameraX, cameraY):
+    def update(self, walls, camera):
+        
+        hit = False
+
+        prevX = self.worldX
+        prevY = self.worldY
 
         self.worldX += self.dx
-        self.rect.x = self.worldX - cameraX
-        
+        self.rect.x = self.worldX - camera.x
+
         # Did moving left or right cause a collision?
         block_hit_list = pygame.sprite.spritecollide(self, walls, False)
         for block in block_hit_list:
-            if self.dx > 0:
-                self.rect.right = block.rect.left
-            else:
-                self.rect.left = block.rect.right
+            hit = True
+            self.worldX = prevX
         
         self.worldY += self.dy
-        self.rect.y = self.worldY - cameraY
+        self.rect.y = self.worldY - camera.y
 
         # Did moving up or down cause a collision?
         block_hit_list = pygame.sprite.spritecollide(self, walls, False)
         for block in block_hit_list:
-            if self.dy > 0:
-                self.rect.bottom = block.rect.top
-            else:
-                self.rect.top = block.rect.bottom
+            hit = True
+            self.worldY = prevY
+    
+        return hit
 
         
