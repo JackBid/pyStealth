@@ -20,60 +20,29 @@ class Board():
         
         return board
 
-    def generateWalls(self):
+    def generateTiles(self, cameraX, cameraY):
         y = 0
         x = 0
         walls = Group()
 
-        for row in self.boardScreen:
+        for row in self.board:
             for item in row:
                 if item == '-':
-                    walls.add(Wall(self.spritesheet, 'horizontal', x, y))
+                    walls.add(Wall(self.spritesheet, 'horizontal', x - cameraX, y - cameraY))
                 elif item == '\\':
-                    walls.add(Wall(self.spritesheet, 'verticle', x, y))
+                    walls.add(Wall(self.spritesheet, 'verticle', x - cameraX, y - cameraY))
                 elif item == '/':
-                    walls.add(Wall(self.spritesheet, 'verticle', x+32, y))
+                    walls.add(Wall(self.spritesheet, 'verticle', x+32 - cameraX, y - cameraY))
                 elif item == '[':
-                    walls.add(Wall(self.spritesheet, 'left corner', x, y))
+                    walls.add(Wall(self.spritesheet, 'left corner', x - cameraX, y - cameraY))
                 elif item == ']':
-                    walls.add(Wall(self.spritesheet, 'right corner', x, y))
+                    walls.add(Wall(self.spritesheet, 'right corner', x - cameraX, y - cameraY))
                 x += 40
             y += 40
             x = 0
         
         return walls
 
-    def adjustBoardScreenWidth(self):
-        
-        newBoard = []
-
-        for row in self.boardScreen:
-            smallRow = row[self.leftIndex:self.leftIndex+20]
-            newBoard.append(smallRow)
-
-        return newBoard
-    
-    def updatePositon(self, direction):
-        
-        if direction == 'up':
-            self.topIndex = max(self.topIndex-1, 0)
-
-        if direction == 'down':
-            self.topIndex += 1
-        
-        if direction == 'right':
-            self.leftIndex += 1
-        
-        if direction == 'left':
-            self.leftIndex -= 1
-
-        self.boardScreen = self.board[self.topIndex:self.topIndex+15]
-        self.boardScreen = self.adjustBoardScreenWidth()
-
     def __init__(self, path):
         self.board = self.readBoardFromFile(path)
-        self.topIndex = 0
-        self.leftIndex = 0
-        self.boardScreen = self.board[self.topIndex:self.topIndex+15]
-        self.boardScreen = self.adjustBoardScreenWidth()
         self.spritesheet = Spritesheet("res/sprites/walls.png")

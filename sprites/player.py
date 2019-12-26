@@ -6,7 +6,8 @@ class Player(Sprite):
         Sprite.__init__(self)
         self.dx = 0
         self.dy = 0
-        self.velocity = 4
+        self.worldX = x
+        self.worldY = y
         self.leftImage = image.load('res/sprites/player_left.png').convert()
         self.leftImage.set_colorkey((255,255,255))
 
@@ -25,11 +26,11 @@ class Player(Sprite):
     def changespeed(self, x, y):
         self.dx += x
         self.dy += y
- 
 
-    def update(self, walls):
-        
-        self.rect.x += self.dx
+    def update(self, walls, cameraX, cameraY):
+
+        self.worldX += self.dx
+        self.rect.x = self.worldX - cameraX
         
         # Did moving left or right cause a collision?
         block_hit_list = pygame.sprite.spritecollide(self, walls, False)
@@ -39,7 +40,8 @@ class Player(Sprite):
             else:
                 self.rect.left = block.rect.right
         
-        self.rect.y += self.dy
+        self.worldY += self.dy
+        self.rect.y = self.worldY - cameraY
 
         # Did moving up or down cause a collision?
         block_hit_list = pygame.sprite.spritecollide(self, walls, False)
