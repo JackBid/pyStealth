@@ -27,6 +27,9 @@ class Board():
 
         for row in self.board:
             for item in row:
+                if x <= -40 or x > 800 or y <= -40 or y > 600:
+                    x += 40
+                    continue
                 if item == '-':
                     walls.add(Wall(self.spritesheet, 'horizontal', x - cameraX, y - cameraY))
                 elif item == '\\':

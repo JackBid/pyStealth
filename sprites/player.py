@@ -31,7 +31,7 @@ class Player(Sprite):
         
         hit = False
 
-        prevX = self.worldX
+        prevX = self.worldX 
         prevY = self.worldY
 
         self.worldX += self.dx
