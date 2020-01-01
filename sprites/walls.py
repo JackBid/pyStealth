@@ -6,6 +6,8 @@ class Wall(Sprite):
         Sprite.__init__(self)
         
         self.ss = spritesheet
+        self.worldX = x
+        self.worldY = y
 
         if position == 'horizontal':
             self.image =  self.ss.image_at(Rect(40, 0, 40, 40))
@@ -19,6 +21,10 @@ class Wall(Sprite):
         elif position == 'right corner':
             self.image = self.ss.image_at(Rect(80, 0, 40, 40))
             self.rect = Rect(x, y, 40, 8)
+    
+    def updatePosition(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
 
     def update(self):
         return

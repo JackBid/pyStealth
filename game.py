@@ -37,52 +37,50 @@ while running:
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                player.changespeed(-4, 0)
                 camera.changespeed(-4, 0)
                 player.image = player.leftImage
             elif event.key == pygame.K_d:
-                player.changespeed(4, 0)
                 camera.changespeed(4, 0)
                 player.image = player.rightImage
             elif event.key == pygame.K_w:
-                player.changespeed(0, -4)
                 camera.changespeed(0, -4)
                 player.image = player.backImage
             elif event.key == pygame.K_s:
-                player.changespeed(0, 4)
                 camera.changespeed(0, 4)
                 player.image = player.frontImage
  
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
-                player.changespeed(4, 0)
                 camera.changespeed(4, 0)
-               # player.image = player.frontImage
             elif event.key == pygame.K_d:
-                player.changespeed(-4, 0)
                 camera.changespeed(-4, 0)
-                #player.image = player.frontImage
             elif event.key == pygame.K_w:
-                player.changespeed(0, 4)
                 camera.changespeed(0, 4)
-                #player.image = player.frontImage
             elif event.key == pygame.K_s:
-                player.changespeed(0, -4)
                 camera.changespeed(0, -4)
-                #player.image = player.frontImage
 
-    walls = board.generateTiles(camera.x, camera.y)
+    print(camera.x)
 
     # Update
-    walls.update()
-    hit = player.update(walls, camera)
+    tiles = board.generateScreenView(camera.x, camera.y)
+    camera.update(player, tiles)
 
-    if not hit:
+    '''
+    # Update
+    tiles.update()
+    playerCollision = player.update(tiles, camera)
+
+    if type(playerCollision).__name__ != 'Wall':
         camera.update()
+    
+    if type(playerCollision).__name__ == 'Coin':
+        print(str(playerCollision.worldX) + ', ' + str(playerCollision.worldY))
+        tiles.remove(playerCollision)'''
+    
 
     # Draw / render
     screen.fill((100, 100, 100))
-    walls.draw(screen)
+    tiles.draw(screen)
     playerGroup.draw(screen)
 
     display.update()

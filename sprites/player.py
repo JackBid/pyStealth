@@ -1,13 +1,11 @@
 from pygame import *
 from pygame.sprite import *
+from sprites.coin import Coin
 
 class Player(Sprite):
     def __init__(self, x, y): # constructor
         Sprite.__init__(self)
-        self.dx = 0
-        self.dy = 0
-        self.worldX = x
-        self.worldY = y
+        
         self.leftImage = image.load('res/sprites/player_left.png').convert()
         self.leftImage.set_colorkey((255,255,255))
 
@@ -23,35 +21,8 @@ class Player(Sprite):
         self.image = self.leftImage
         self.rect = self.image.get_rect().move(x, y)
 
-    def changespeed(self, x, y):
-        self.dx += x
-        self.dy += y
 
     def update(self, walls, camera):
-        
-        hit = False
-
-        prevX = self.worldX 
-        prevY = self.worldY
-
-        self.worldX += self.dx
-        self.rect.x = self.worldX - camera.x
-
-        # Did moving left or right cause a collision?
-        block_hit_list = pygame.sprite.spritecollide(self, walls, False)
-        for block in block_hit_list:
-            hit = True
-            self.worldX = prevX
-        
-        self.worldY += self.dy
-        self.rect.y = self.worldY - camera.y
-
-        # Did moving up or down cause a collision?
-        block_hit_list = pygame.sprite.spritecollide(self, walls, False)
-        for block in block_hit_list:
-            hit = True
-            self.worldY = prevY
-    
-        return hit
+        return
 
         

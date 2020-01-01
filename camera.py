@@ -1,3 +1,6 @@
+from pygame import *
+from pygame.sprite import *
+
 class Camera:
     def __init__(self):
         self.x = 0
@@ -13,7 +16,26 @@ class Camera:
         self.dx += x
         self.dy += y
     
-    def update(self):
-        self.x += self.dx
-        self.y += self.dy
+    def update(self, player, tiles):
+
+        tempRect = Rect(380 + self.dx, 280, 40, 40)
+        noCollision = True
+        
+        for tile in tiles.sprites():
+            if tempRect.colliderect(tile.rect):
+                noCollision = False
+        
+        if noCollision:
+            self.x += self.dx
+
+        tempRect = Rect(380, 280 + self.dy, 40, 40)
+        noCollision = True
+
+        for tile in tiles.sprites():
+            if tempRect.colliderect(tile.rect):
+                noCollision = False
+        
+        if noCollision:
+            self.y += self.dy
+
     
