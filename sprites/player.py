@@ -5,7 +5,7 @@ from sprites.coin import Coin
 class Player(Sprite):
     def __init__(self, x, y): # constructor
         Sprite.__init__(self)
-        
+
         self.leftImage = image.load('res/sprites/player_left.png').convert()
         self.leftImage.set_colorkey((255,255,255))
 
@@ -21,8 +21,8 @@ class Player(Sprite):
         self.image = self.leftImage
         self.rect = self.image.get_rect().move(x, y)
 
+        self.score = 0
+
 
     def update(self, walls, camera):
         return
-
-        
