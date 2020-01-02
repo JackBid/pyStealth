@@ -18,24 +18,33 @@ class Camera:
     
     def update(self, player, tiles):
 
+        tempRect = Rect(380 + self.dx, 280 + self.dy, 40, 40)
+        
+
         tempRect = Rect(380 + self.dx, 280, 40, 40)
-        noCollision = True
+        wallCollision = False
         
         for tile in tiles.sprites():
             if tempRect.colliderect(tile.rect):
-                noCollision = False
+                if type(tile).__name__ == 'Wall':
+                    wallCollision = True
+                elif type(tile).__name__ == 'Coin':
+                    tile.kill()
         
-        if noCollision:
+        if not wallCollision:
             self.x += self.dx
 
         tempRect = Rect(380, 280 + self.dy, 40, 40)
-        noCollision = True
+        wallCollision = False
 
         for tile in tiles.sprites():
             if tempRect.colliderect(tile.rect):
-                noCollision = False
+                if type(tile).__name__ == 'Wall':
+                    wallCollision = True
+                elif type(tile).__name__ == 'Coin':
+                    tile.kill()
         
-        if noCollision:
+        if not wallCollision:
             self.y += self.dy
 
     

@@ -20,6 +20,7 @@ clock = pygame.time.Clock()
 # get board from .txt and convert to sprites
 board = Board('res/boards/board.txt')
 camera = Camera()
+tiles = board.generateScreenView(camera.x, camera.y)
 
 # create player
 player = Player(380, 280)
@@ -58,24 +59,19 @@ while running:
                 camera.changespeed(0, 4)
             elif event.key == pygame.K_s:
                 camera.changespeed(0, -4)
+    '''
+    walls = Group()
+    coins = Group()
 
-    print(camera.x)
+    for sprite in tiles.sprites():
+        if type(sprite).__name__ == 'Wall':
+            walls.add(sprite)
+        elif type(sprite).__name__ == 'Coin':
+            coins.add(sprite)'''
 
     # Update
     tiles = board.generateScreenView(camera.x, camera.y)
     camera.update(player, tiles)
-
-    '''
-    # Update
-    tiles.update()
-    playerCollision = player.update(tiles, camera)
-
-    if type(playerCollision).__name__ != 'Wall':
-        camera.update()
-    
-    if type(playerCollision).__name__ == 'Coin':
-        print(str(playerCollision.worldX) + ', ' + str(playerCollision.worldY))
-        tiles.remove(playerCollision)'''
     
 
     # Draw / render
