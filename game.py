@@ -75,9 +75,8 @@ while running:
 
     # Update
     tiles = board.generateScreenView(camera.x, camera.y)
-    enemies.update(walls, camera)
+    enemies.update(walls, player, camera)
     camera.update(player, tiles)
-
 
     text = font.render('Score: ' + str(player.score), True, (255,0,0))
     textRect = text.get_rect()
@@ -89,7 +88,6 @@ while running:
     screen.fill((100, 100, 100))
     tiles.draw(screen)
     playerGroup.draw(screen)
-    #enemies.draw(screen)
     screen.blit(text, textRect)
 
     display.update()

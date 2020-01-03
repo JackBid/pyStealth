@@ -47,7 +47,7 @@ class Board():
                 elif item == 'C':
                     tiles.add(Coin(x, y))
                 elif item == 'E':
-                    tiles.add(Enemy(x, y, 0, 4))
+                    tiles.add(Enemy(x, y, 0, 1))
                 elif item == 'e':
                     tiles.add(Enemy(x, y, 4, 0))
                 x += 40
