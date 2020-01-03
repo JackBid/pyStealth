@@ -5,6 +5,7 @@ from board import Board
 from camera import Camera
 from sprites.walls import *
 from sprites.player import Player
+from sprites.enemy import Enemy
 
 # 20 x 15
 WIDTH = 800
@@ -22,10 +23,20 @@ board = Board('res/boards/board.txt')
 camera = Camera()
 tiles = board.generateScreenView(camera.x, camera.y)
 
+walls = Group()
+enemies = Group()
+
+for tile in tiles:
+    if type(tile).__name__ == 'Wall':
+        walls.add(tile)
+    if type(tile).__name__ == 'Enemy':
+        enemies.add(tile)
+
 # create player
 player = Player(380, 280)
 playerGroup = Group()
 playerGroup.add(player)
+
 
 font = pygame.font.Font('freesansbold.ttf', 28)
 
@@ -64,7 +75,9 @@ while running:
 
     # Update
     tiles = board.generateScreenView(camera.x, camera.y)
+    enemies.update(walls, camera)
     camera.update(player, tiles)
+
 
     text = font.render('Score: ' + str(player.score), True, (255,0,0))
     textRect = text.get_rect()
@@ -76,6 +89,7 @@ while running:
     screen.fill((100, 100, 100))
     tiles.draw(screen)
     playerGroup.draw(screen)
+    #enemies.draw(screen)
     screen.blit(text, textRect)
 
     display.update()

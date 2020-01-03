@@ -3,9 +3,15 @@ from pygame.sprite import *
 
 from sprites.walls import *
 from sprites.coin import Coin
+from sprites.enemy import Enemy
 from spritesheet import Spritesheet
 
 class Board():
+
+    def __init__(self, path):
+        self.board = self.readBoardFromFile(path)
+        self.spritesheet = Spritesheet("res/sprites/walls.png")
+        self.worldView = self.generateWorldView()
 
     def readBoardFromFile(self, path):
         board = []
@@ -18,7 +24,7 @@ class Board():
                 if char != '\n':
                     row.append(char)
             board.append(row)
-        
+
         return board
 
     def generateWorldView(self):
@@ -40,10 +46,14 @@ class Board():
                     tiles.add(Wall(self.spritesheet, 'right corner', x, y))
                 elif item == 'C':
                     tiles.add(Coin(x, y))
+                elif item == 'E':
+                    tiles.add(Enemy(x, y, 0, 4))
+                elif item == 'e':
+                    tiles.add(Enemy(x, y, 4, 0))
                 x += 40
             y += 40
             x = 0
-        
+
         return tiles
 
     def generateScreenView(self, cameraX, cameraY):
@@ -58,11 +68,5 @@ class Board():
             if screenX > -40 or screenX < 800 or screenY > -40 or screenY < 600:
                 tile.updatePosition(screenX, screenY)
                 tiles.add(tile)
-        
-        return tiles
 
-    def __init__(self, path):
-        self.board = self.readBoardFromFile(path)
-        self.spritesheet = Spritesheet("res/sprites/walls.png")
-        self.worldView = self.generateWorldView()
-        
+        return tiles

@@ -43,6 +43,7 @@ class Camera:
                 if type(tile).__name__ == 'Wall':
                     wallCollision = True
                 elif type(tile).__name__ == 'Coin':
+                    player.score += 1
                     tile.kill()
 
         if not wallCollision:
