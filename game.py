@@ -7,119 +7,153 @@ from sprites.walls import *
 from sprites.player import Player
 from sprites.enemy import Enemy
 
-# 20 x 15 tile game
-WIDTH = 800
-HEIGHT = 600
-running = True
+class Game():
 
-# pygame setup
-pygame.init()
-screen = display.set_mode((WIDTH, HEIGHT))
-display.set_caption("pyStealth")
-clock = pygame.time.Clock()
+    def __init__(self): # constructor
 
-# Create camera and get board from .txt and convert to tile sprites
-camera = Camera()
-camera.x = 50
-camera.y = 200
-board = Board('res/boards/cathedral_floor.txt')
-tiles = board.generateScreenView(camera.x, camera.y)
+        # 20 x 15 tile game
+        self.windowWidth = 800
+        self.windowHeight = 600
 
-# walls and enemies are stored as tiles
-# but we want to separate them as not all operations apply to both
-walls = Group()
-enemies = Group()
+        # pygame setup
+        pygame.init()
+        self.screen = display.set_mode((self.windowWidth, self.windowHeight))
+        display.set_caption("pyStealth")
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font('freesansbold.ttf', 28)
 
-for tile in tiles:
-    if type(tile).__name__ == 'Wall':
-        walls.add(tile)
-    if type(tile).__name__ == 'Enemy':
-        enemies.add(tile)
+        # Create a player object and a group for rendering
+        self.player = Player(380, 280)
+        self.playerGroup = Group()
+        self.playerGroup.add(self.player)
 
-# create player in middle of screen, add to group
-player = Player(380, 280)
-playerGroup = Group()
-playerGroup.add(player)
+        # Create board and camera objects
+        self.board = Board('res/boards/cathedral_floor.txt')
+        self.currentLevel = 'cathedral_floor'
+        self.camera = Camera(50, 200)
 
+        # Create sprite groups for all tiles, enemies and walls
+        self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
+        self.enemies = self.findTiles('Enemy')
+        self.walls = self.findTiles('Wall')
 
-font = pygame.font.Font('freesansbold.ttf', 28)
+        # Set running to True and start the game
+        self.running = True
+        self.run()
 
-def loadLevel(level):
-    global board, camera, tiles, walls, enemies, player, playerGroup
+    # Return a group of tiles that match a given type
+    def findTiles(self, tileType):
+        group = Group()
 
-    enemies = Group()
-    player.enemyCollision = False
+        for tile in self.tiles:
+            if type(tile).__name__ == tileType:
+                group.add(tile)
 
-    board = Board('res/boards/' + level + '.txt')
+        return group
 
-    camera.x = 0
-    camera.y = 10
-    tiles = board.generateScreenView(camera.x, camera.y)
+    # Used to load a new level
+    def loadLevel(self, levelName, startX, startY):
 
-    walls = Group()
-    enemies = Group()
+        self.board = Board('res/boards/' + levelName + '.txt')
 
-    for tile in tiles:
-        if type(tile).__name__ == 'Wall':
-            walls.add(tile)
-        if type(tile).__name__ == 'Enemy':
-            enemies.add(tile)
+        self.camera.x = startX
+        self.camera.y = startY
 
-    playerGroup = Group()
-    playerGroup.add(player)
+        self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
+        self.enemies = self.findTiles('Enemy')
+        self.walls = self.findTiles('Wall')
 
-# the overall event loop
-while running:
+        self.currentLevel = levelName
 
-    clock.tick(30)
+    # Used to restart a level
+    def restartLevel(self):
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        # Find how many coins were collected and subtract this from the players score
+        coinsCollected = self.board.numberOfCoins - self.board.numberOfCoinsLeft()
+        self.player.score -= coinsCollected
 
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                camera.changespeed(-4, 0)
-                player.image = player.leftImage
-            elif event.key == pygame.K_d:
-                camera.changespeed(4, 0)
-                player.image = player.rightImage
-            elif event.key == pygame.K_w:
-                camera.changespeed(0, -4)
-                player.image = player.backImage
-            elif event.key == pygame.K_s:
-                camera.changespeed(0, 4)
-                player.image = player.frontImage
+        self.board = Board('res/boards/' + self.currentLevel + '.txt')
 
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
-                camera.changespeed(4, 0)
-            elif event.key == pygame.K_d:
-                camera.changespeed(-4, 0)
-            elif event.key == pygame.K_w:
-                camera.changespeed(0, 4)
-            elif event.key == pygame.K_s:
-                camera.changespeed(0, -4)
+        self.camera.x = 50
+        self.camera.y = 200
 
-    # Update
-    tiles = board.generateScreenView(camera.x, camera.y)
-    enemies.update(walls, player, camera)
-    camera.update(player, tiles)
+        self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
+        self.enemies = self.findTiles('Enemy')
+        self.walls = self.findTiles('Wall')
 
-    if player.enemyCollision:
-        loadLevel('board')
+    # Called by the game loop, handle any events (eg. key presses)
+    # Used to move the camera and update sprite orientation
+    def handleEvents(self):
 
+        for event in pygame.event.get():
 
-    text = font.render('Score: ' + str(player.score), True, (255,0,0))
-    textRect = text.get_rect()
-    textRect.x = 0
-    textRect.y = 0
+            if event.type == pygame.QUIT:
+                self.running = False
 
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    self.camera.changespeed(-4, 0)
+                    self.player.image = self.player.leftImage
+                elif event.key == pygame.K_d:
+                    self.camera.changespeed(4, 0)
+                    self.player.image = self.player.rightImage
+                elif event.key == pygame.K_w:
+                    self.camera.changespeed(0, -4)
+                    self.player.image = self.player.backImage
+                elif event.key == pygame.K_s:
+                    self.camera.changespeed(0, 4)
+                    self.player.image = self.player.frontImage
 
-    # Draw / render
-    screen.fill((100, 100, 100))
-    tiles.draw(screen)
-    playerGroup.draw(screen)
-    screen.blit(text, textRect)
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_a:
+                    self.camera.changespeed(4, 0)
+                elif event.key == pygame.K_d:
+                    self.camera.changespeed(-4, 0)
+                elif event.key == pygame.K_w:
+                    self.camera.changespeed(0, 4)
+                elif event.key == pygame.K_s:
+                    self.camera.changespeed(0, -4)
 
-    display.update()
+    # Called every game loop
+    # Call the update on sprite groups
+    def update(self):
+
+        # Update
+        self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
+        self.enemies.update(self.walls, self.player, self.camera)
+        self.camera.update(self.player, self.tiles)
+
+        if self.player.enemyCollision:
+            self.restartLevel()
+            self.player.enemyCollision = False
+
+        self.text = self.font.render('Score: ' + str(self.player.score), True, (255,0,0))
+        self.textRect = self.text.get_rect()
+        self.textRect.x = 0
+        self.textRect.y = 0
+
+    # Called at end of game loop
+    # Render information to screen based on current states
+    def render(self):
+
+        # Draw / render
+        self.screen.fill((100, 100, 100))
+        self.tiles.draw(self.screen)
+        self.playerGroup.draw(self.screen)
+        self.screen.blit(self.text, self.textRect)
+
+        display.update()
+
+    # The game loop
+    def run(self):
+
+        while self.running:
+
+            self.clock.tick(30)
+
+            self.handleEvents()
+
+            self.update()
+            self.render()
+
+game = Game()

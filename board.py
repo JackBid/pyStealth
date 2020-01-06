@@ -11,7 +11,17 @@ class Board():
     def __init__(self, path):
         self.board = self.readBoardFromFile(path)
         self.spritesheet = Spritesheet("res/sprites/walls.png")
+        self.numberOfCoins = 0
         self.worldView = self.generateWorldView()
+
+    def numberOfCoinsLeft(self):
+        coinsLeft = 0
+
+        for tile in self.worldView:
+            if type(tile).__name__ == 'Coin':
+                coinsLeft += 1
+
+        return coinsLeft
 
     def readBoardFromFile(self, path):
         board = []
@@ -46,6 +56,7 @@ class Board():
                     tiles.add(Wall(self.spritesheet, 'right corner', x, y))
                 elif item == 'C':
                     tiles.add(Coin(x, y))
+                    self.numberOfCoins += 1
                 elif item == 'E':
                     tiles.add(Enemy(x, y, 0, 1))
                 elif item == 'e':
