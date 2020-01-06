@@ -23,6 +23,8 @@ class Player(Sprite):
 
         self.score = 0
 
+        self.enemyCollision = False
+
 
     def update(self, walls, camera):
         return

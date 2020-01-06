@@ -22,7 +22,9 @@ class Enemy(Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def handleCollision(self, walls):
+    def handleWallCollision(self, walls):
+
+        # Handle y axis movement
         tempRect = Rect(self.rect.x, self.rect.y + self.dy, 40, 40)
         collision = False
 
@@ -35,6 +37,7 @@ class Enemy(Sprite):
 
         self.worldY += self.dy
 
+        # Handle x axis movement
         tempRect = Rect(self.rect.x + self.dx, self.rect.y, 40, 40)
         collision = False
 
@@ -48,10 +51,9 @@ class Enemy(Sprite):
         self.worldX += self.dx
 
     def update(self, walls, player, camera):
-        self.handleCollision(walls)
+        self.handleWallCollision(walls)
 
         playerSeen = False
-
         visibleRect = Rect(0,0,1,1)
 
         if self.dx > 0:
@@ -62,7 +64,6 @@ class Enemy(Sprite):
             visibleRect = Rect(self.rect.x, self.rect.y, 40, 40 + self.sight)
         elif self.dy < 0:
             visibleRect = Rect(self.rect.x, self.rect.y - self.sight, 40, self.sight)
-
 
         for wall in walls:
             if visibleRect.colliderect(wall.rect):
@@ -81,7 +82,4 @@ class Enemy(Sprite):
 
 
         if player.rect.colliderect(visibleRect):
-            camera.x = 0
-            camera.y = 100
-
-        return visibleRect
+            player.enemyCollision = True
