@@ -11,16 +11,22 @@ class Wall(Sprite):
 
         if position == 'horizontal':
             self.image =  self.ss.image_at(Rect(40, 0, 40, 40))
-            self.rect = Rect(x, y, 40, 8)
+            self.rect = Rect(x, y, 40, 12)
         elif position == 'verticle':
-            self.image = self.ss.image_at(Rect(120, 0, 8, 40))
-            self.rect = Rect(x, y, 8, 40)
-        elif position == 'left corner':
+            self.image = self.ss.image_at(Rect(120, 0, 12, 40))
+            self.rect = Rect(x, y, 12, 40)
+        elif position == 'top left corner':
             self.image = self.ss.image_at(Rect(0, 0, 40, 40))
-            self.rect = Rect(x, y, 40, 8)
-        elif position == 'right corner':
+            self.rect = Rect(x, y, 40, 12)
+        elif position == 'top right corner':
             self.image = self.ss.image_at(Rect(80, 0, 40, 40))
-            self.rect = Rect(x, y, 40, 8)
+            self.rect = Rect(x, y, 40, 12)
+        elif position == 'bottom right corner':
+            self.image = self.ss.image_at(Rect(80, 40, 40, 40))
+            self.rect = Rect(x, y, 40, 12)
+        elif position == 'bottom left corner':
+            self.image = self.ss.image_at(Rect(0, 40, 40, 40))
+            self.rect = Rect(x, y, 40, 12)
     
     def updatePosition(self, x, y):
         self.rect.x = x

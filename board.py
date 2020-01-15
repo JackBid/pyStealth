@@ -10,7 +10,7 @@ class Board():
 
     def __init__(self, path):
         self.board = self.readBoardFromFile(path)
-        self.spritesheet = Spritesheet("res/sprites/walls.png")
+        self.spritesheet = Spritesheet("res/sprites/spritesheet.png")
         self.numberOfCoins = 0
         self.worldView = self.generateWorldView()
 
@@ -49,13 +49,17 @@ class Board():
                 elif item == '\\':
                     tiles.add(Wall(self.spritesheet, 'verticle', x, y))
                 elif item == '/':
-                    tiles.add(Wall(self.spritesheet, 'verticle', x+32, y))
+                    tiles.add(Wall(self.spritesheet, 'verticle', x+28, y))
                 elif item == '[':
-                    tiles.add(Wall(self.spritesheet, 'left corner', x, y))
+                    tiles.add(Wall(self.spritesheet, 'top left corner', x, y))
                 elif item == ']':
-                    tiles.add(Wall(self.spritesheet, 'right corner', x, y))
+                    tiles.add(Wall(self.spritesheet, 'top right corner', x, y))
+                elif item == '}':
+                    tiles.add(Wall(self.spritesheet, 'bottom right corner', x, y))
+                elif item == '{':
+                    tiles.add(Wall(self.spritesheet, 'bottom left corner', x, y))
                 elif item == 'C':
-                    tiles.add(Coin(x, y))
+                    tiles.add(Coin(x, y, self.spritesheet))
                     self.numberOfCoins += 1
                 elif item == 'E':
                     tiles.add(Enemy(x, y, 0, 1))

@@ -36,6 +36,7 @@ class Game():
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
         self.walls = self.findTiles('Wall')
+        self.coins = self.findTiles('Coin')
 
         # Set running to True and start the game
         self.running = True
@@ -122,6 +123,7 @@ class Game():
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies.update(self.walls, self.player, self.camera)
         self.camera.update(self.player, self.tiles)
+        self.coins.update()
 
         if self.player.enemyCollision:
             self.restartLevel()
