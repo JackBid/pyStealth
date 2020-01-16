@@ -30,13 +30,16 @@ class Game():
         # Create board and camera objects
         self.board = Board('res/boards/cathedral_floor.txt')
         self.currentLevel = 'cathedral_floor'
-        self.camera = Camera(50, 200)
+        self.camera = Camera(self.board.startPosition[0], self.board.startPosition[1])
 
         # Create sprite groups for all tiles, enemies and walls
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
         self.walls = self.findTiles('Wall')
         self.coins = self.findTiles('Coin')
+
+        # Create camera, must be done after board.generateScreenView has been called
+        
 
         # Set running to True and start the game
         self.running = True
@@ -81,6 +84,7 @@ class Game():
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
         self.walls = self.findTiles('Wall')
+        self.coins = self.findTiles('Coin')
 
     # Called by the game loop, handle any events (eg. key presses)
     # Used to move the camera and update sprite orientation

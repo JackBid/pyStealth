@@ -2,11 +2,16 @@ from pygame import *
 from pygame.sprite import *
 
 class Enemy(Sprite):
-    def __init__(self, x, y, dx, dy): # constructor
+    def __init__(self, x, y, dx, dy, spritesheet): # constructor
         Sprite.__init__(self)
 
-        self.image = image.load('res/sprites/player_front.png').convert()
-        self.image.set_colorkey((255,255,255))
+        self.image1 = spritesheet.image_at(Rect(0, 120, 40, 40))
+        self.image1.set_colorkey((255,255,255))
+        self.image2 = spritesheet.image_at(Rect(40, 120, 40, 40))
+        self.image2.set_colorkey((255,255,255))
+
+        self.image = self.image1
+        #self.image.set_colorkey((255,255,255))
 
         self.rect = self.image.get_rect().move(x, y)
 
@@ -17,6 +22,9 @@ class Enemy(Sprite):
         self.worldY = y
 
         self.sight = 200
+
+        self.animationCounter = 0
+        self.walk = False
 
     def updatePosition(self, x, y):
         self.rect.x = x
@@ -47,8 +55,29 @@ class Enemy(Sprite):
 
         if collision:
             self.dx = -1 * self.dx
+            self.image = pygame.transform.flip(self.image, True, False)
 
         self.worldX += self.dx
+
+    def animate(self, delay):
+
+        self.animationCounter += 1
+
+        if self.animationCounter == delay:
+
+            if self.walk == False:
+                self.image = self.image2
+                self.walk = True
+            else:
+                self.image = self.image1
+                self.walk = False
+
+
+            if self.dx < 0:
+                self.image = pygame.transform.flip(self.image, True, False)
+
+            self.animationCounter = 0
+
 
     def update(self, walls, player, camera):
         self.handleWallCollision(walls)
@@ -83,3 +112,6 @@ class Enemy(Sprite):
 
         if player.rect.colliderect(visibleRect):
             player.enemyCollision = True
+        
+        self.animate(10)
+

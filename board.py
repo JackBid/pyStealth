@@ -12,6 +12,7 @@ class Board():
         self.board = self.readBoardFromFile(path)
         self.spritesheet = Spritesheet("res/sprites/spritesheet.png")
         self.numberOfCoins = 0
+        self.startPosition = (0, 0)
         self.worldView = self.generateWorldView()
 
     def numberOfCoinsLeft(self):
@@ -62,9 +63,12 @@ class Board():
                     tiles.add(Coin(x, y, self.spritesheet))
                     self.numberOfCoins += 1
                 elif item == 'E':
-                    tiles.add(Enemy(x, y, 0, 1))
+                    tiles.add(Enemy(x, y, 0, 1, self.spritesheet))
                 elif item == 'e':
-                    tiles.add(Enemy(x, y, 4, 0))
+                    tiles.add(Enemy(x, y, 4, 0, self.spritesheet))
+                elif item == 'S':
+                    self.startPosition = (x-400, y-300)
+                    print(self.startPosition)
                 x += 40
             y += 40
             x = 0
