@@ -17,7 +17,7 @@ class Board():
         self.numberOfCoins = self.numberOfCoinsLeft()
     
     def removeCoins(self, positions):
-        print(positions)
+
         for position in positions:
             boardX = int(position[0] / 40)
             boardY = int(position[1] / 40)

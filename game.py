@@ -51,6 +51,7 @@ class Game():
         self.coins = self.findTiles('Coin')   
 
         # Set running to True and start the game
+        self.completed = False
         self.running = True
         self.run()    
 
@@ -124,13 +125,10 @@ class Game():
                 elif event.key == pygame.K_d:
                     self.camera.changespeed(4, 0)
                     self.player.direction = 'right'
-                    #self.player.image = self.player.rightImage
                 elif event.key == pygame.K_w:
                     self.camera.changespeed(0, -4)
-                    #self.player.image = self.player.backImage
                 elif event.key == pygame.K_s:
                     self.camera.changespeed(0, 4)
-                    #self.player.image = self.player.frontImage
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -167,8 +165,6 @@ class Game():
         elif self.currentLevel == 'level_3':
             self.addPositions(self.level3_collected_coins, collected_coin_locations)
 
-        
-
         if newLevel != '':
             self.loadLevel(newLevel)
 
@@ -181,6 +177,10 @@ class Game():
         self.textRect.x = 0
         self.textRect.y = 0
 
+        if self.player.score == 10:
+            self.running = False
+            self.completed = True
+
     # Called at end of game loop
     # Render information to screen based on current states
     def render(self):
@@ -192,6 +192,29 @@ class Game():
         self.screen.blit(self.text, self.textRect)
 
         display.update()
+    
+    def restartGame(self):
+
+        # Create a player object and a group for rendering
+        self.player = Player(380, 280, self.spritesheet)
+        self.playerGroup = Group()
+        self.playerGroup.add(self.player)
+
+        self.running = True
+        self.completed = False
+
+        self.level0_collected_coins = []
+        self.level1_collected_coins = []
+        self.level2_collected_coins = []
+        self.level3_collected_coins = []
+
+        self.loadLevel('level_1')
+
+        self.camera = Camera(self.board.startPosition[0], self.board.startPosition[1])
+        self.camera.dx = 0
+        self.camera.dy = 0
+
+        self.run()
 
     # The game loop
     def run(self):
@@ -205,6 +228,23 @@ class Game():
             self.update()
             self.render()
 
+        while self.completed:
+
+            self.text = self.font.render('You have completed the game! Press R to restart.', True, (255,255,255))
+            self.textRect = self.text.get_rect()
+            self.textRect.x = 40
+            self.textRect.y = 290
+
+            self.render()
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.restartGame()
         
 
 game = Game()

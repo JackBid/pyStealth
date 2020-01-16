@@ -5,9 +5,9 @@ class Enemy(Sprite):
     def __init__(self, x, y, dx, dy, spritesheet): # constructor
         Sprite.__init__(self)
 
-        self.image1 = spritesheet.image_at(Rect(0, 120, 40, 40))
+        self.image1 = spritesheet.image_at(Rect(0, 120, 32, 40))
         self.image1.set_colorkey((255,255,255))
-        self.image2 = spritesheet.image_at(Rect(40, 120, 40, 40))
+        self.image2 = spritesheet.image_at(Rect(40, 120, 32, 40))
         self.image2.set_colorkey((255,255,255))
 
         self.image = self.image1
@@ -33,7 +33,7 @@ class Enemy(Sprite):
     def handleWallCollision(self, walls):
 
         # Handle y axis movement
-        tempRect = Rect(self.rect.x, self.rect.y + self.dy, 40, 40)
+        tempRect = Rect(self.rect.x, self.rect.y + self.dy, 32, 40)
         collision = False
 
         for wall in walls.sprites():
@@ -46,7 +46,7 @@ class Enemy(Sprite):
         self.worldY += self.dy
 
         # Handle x axis movement
-        tempRect = Rect(self.rect.x + self.dx, self.rect.y, 40, 40)
+        tempRect = Rect(self.rect.x + self.dx, self.rect.y, 32, 40)
         collision = False
 
         for wall in walls.sprites():
@@ -86,13 +86,13 @@ class Enemy(Sprite):
         visibleRect = Rect(0,0,1,1)
 
         if self.dx > 0:
-            visibleRect = Rect(self.rect.x, self.rect.y, 40 + self.sight, 40)
+            visibleRect = Rect(self.rect.x, self.rect.y, 32 + self.sight, 40)
         elif self.dx < 0:
             visibleRect = Rect(self.rect.x - self.sight, self.rect.y, self.sight, 40)
         elif self.dy > 0:
-            visibleRect = Rect(self.rect.x, self.rect.y, 40, 40 + self.sight)
+            visibleRect = Rect(self.rect.x, self.rect.y, 32, 40 + self.sight)
         elif self.dy < 0:
-            visibleRect = Rect(self.rect.x, self.rect.y - self.sight, 40, self.sight)
+            visibleRect = Rect(self.rect.x, self.rect.y - self.sight, 32, self.sight)
 
         for wall in walls:
             if visibleRect.colliderect(wall.rect):
