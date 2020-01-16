@@ -24,6 +24,8 @@ class Camera:
         tempRect = Rect(380 + self.dx, 280, 40, 40)
         wallCollision = False
 
+        newLevel = ''
+
         for tile in tiles.sprites():
             if tempRect.colliderect(tile.rect):
                 if type(tile).__name__ == 'Wall':
@@ -31,6 +33,8 @@ class Camera:
                 elif type(tile).__name__ == 'Coin':
                     player.score += 1
                     tile.kill()
+                elif type(tile).__name__ == 'LevelLoader':
+                    newLevel = 'level_' + str(tile.levelToLoad)
 
         if not wallCollision:
             self.x += self.dx
@@ -45,6 +49,10 @@ class Camera:
                 elif type(tile).__name__ == 'Coin':
                     player.score += 1
                     tile.kill()
+                elif type(tile).__name__ == 'LevelLoader':
+                    newLevel = 'level_' + str(tile.levelToLoad)
 
         if not wallCollision:
             self.y += self.dy
+
+        return newLevel

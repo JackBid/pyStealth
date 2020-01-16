@@ -28,7 +28,7 @@ class Game():
         self.playerGroup.add(self.player)
 
         # Create board and camera objects
-        self.board = Board('res/boards/cathedral_floor.txt')
+        self.board = Board('res/boards/level_1.txt')
         self.currentLevel = 'cathedral_floor'
         self.camera = Camera(self.board.startPosition[0], self.board.startPosition[1])
 
@@ -56,12 +56,12 @@ class Game():
         return group
 
     # Used to load a new level
-    def loadLevel(self, levelName, startX, startY):
+    def loadLevel(self, levelName):
 
         self.board = Board('res/boards/' + levelName + '.txt')
 
-        self.camera.x = startX
-        self.camera.y = startY
+        self.camera.x = self.board.startPosition[0]
+        self.camera.y = self.board.startPosition[1]
 
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
@@ -126,8 +126,12 @@ class Game():
         # Update
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies.update(self.walls, self.player, self.camera)
-        self.camera.update(self.player, self.tiles)
         self.coins.update()
+
+        newLevel = self.camera.update(self.player, self.tiles)
+
+        if newLevel != '':
+            self.loadLevel(newLevel)
 
         if self.player.enemyCollision:
             self.restartLevel()

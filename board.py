@@ -4,12 +4,14 @@ from pygame.sprite import *
 from sprites.walls import *
 from sprites.coin import Coin
 from sprites.enemy import Enemy
+from sprites.level_loader import LevelLoader
 from spritesheet import Spritesheet
 
 class Board():
 
     def __init__(self, path):
         self.board = self.readBoardFromFile(path)
+        self.level = int(path[-5])
         self.spritesheet = Spritesheet("res/sprites/spritesheet.png")
         self.numberOfCoins = 0
         self.startPosition = (0, 0)
@@ -66,9 +68,12 @@ class Board():
                     tiles.add(Enemy(x, y, 0, 1, self.spritesheet))
                 elif item == 'e':
                     tiles.add(Enemy(x, y, 4, 0, self.spritesheet))
+                elif item == 'U':
+                    tiles.add(LevelLoader(x, y, self.spritesheet, 'up', self.level+1))
+                elif item == 'D':
+                    tiles.add(LevelLoader(x, y, self.spritesheet, 'down', self.level-1))
                 elif item == 'S':
                     self.startPosition = (x-400, y-300)
-                    print(self.startPosition)
                 x += 40
             y += 40
             x = 0
