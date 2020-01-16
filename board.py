@@ -60,6 +60,12 @@ class Board():
                     tiles.add(Wall(self.spritesheet, 'bottom right corner', x, y))
                 elif item == '{':
                     tiles.add(Wall(self.spritesheet, 'bottom left corner', x, y))
+                elif item == '|':
+                    tiles.add(Wall(self.spritesheet, 'bottom slice', x, y))
+                elif item == '+':
+                    tiles.add(Wall(self.spritesheet, 'top slice', x, y))
+                elif item == '~':
+                    tiles.add(Wall(self.spritesheet, 'top slice', x+28, y))
                 elif item == 'C':
                     tiles.add(Coin(x, y, self.spritesheet))
                     self.numberOfCoins += 1

@@ -27,6 +27,12 @@ class Wall(Sprite):
         elif position == 'bottom left corner':
             self.image = self.ss.image_at(Rect(0, 40, 40, 40))
             self.rect = Rect(x, y, 40, 12)
+        elif position == 'bottom slice':
+            self.image = self.ss.image_at(Rect(120, 40, 12, 40))
+            self.rect = Rect(x, y, 12, 12)
+        elif position == 'top slice':
+            self.image = self.ss.image_at(Rect(120, 80, 12, 40))
+            self.rect = Rect(x, y, 12, 40)
     
     def updatePosition(self, x, y):
         self.rect.x = x
