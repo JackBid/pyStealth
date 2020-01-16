@@ -9,9 +9,11 @@ class LevelLoader(Sprite):
         self.direction = direction
 
         if self.direction == 'up':
-            self.image = spritesheet.image_at(Rect(0, 120, 40, 40))
+            self.image = spritesheet.image_at(Rect(132, 40, 40, 40))
         else:
-            self.image = spritesheet.image_at(Rect(0, 120, 40, 40))
+            self.image = spritesheet.image_at(Rect(132, 0, 40, 40))
+        
+        self.image.set_colorkey((255,255,255))
         
         self.rect = Rect(x, y, 40, 40)
 

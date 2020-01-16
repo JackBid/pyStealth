@@ -18,10 +18,10 @@ class Camera:
 
     def update(self, player, tiles):
 
-        tempRect = Rect(380 + self.dx, 280 + self.dy, 40, 40)
+        tempRect = Rect(380 + self.dx, 280 + self.dy, 28, 40)
 
 
-        tempRect = Rect(380 + self.dx, 280, 40, 40)
+        tempRect = Rect(380 + self.dx, 280, 28, 40)
         wallCollision = False
 
         newLevel = ''
@@ -39,7 +39,7 @@ class Camera:
         if not wallCollision:
             self.x += self.dx
 
-        tempRect = Rect(380, 280 + self.dy, 40, 40)
+        tempRect = Rect(380, 280 + self.dy, 28, 40)
         wallCollision = False
 
         for tile in tiles.sprites():

@@ -7,6 +7,8 @@ from sprites.walls import *
 from sprites.player import Player
 from sprites.enemy import Enemy
 
+from spritesheet import Spritesheet
+
 class Game():
 
     def __init__(self): # constructor
@@ -22,14 +24,17 @@ class Game():
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font('freesansbold.ttf', 28)
 
+        # Load spritesheet
+        self.spritesheet = Spritesheet("res/sprites/spritesheet.png")
+
         # Create a player object and a group for rendering
-        self.player = Player(380, 280)
+        self.player = Player(380, 280, self.spritesheet)
         self.playerGroup = Group()
         self.playerGroup.add(self.player)
 
         # Create board and camera objects
-        self.board = Board('res/boards/level_1.txt')
-        self.currentLevel = 'cathedral_floor'
+        self.board = Board('res/boards/level_1.txt', self.spritesheet)
+        self.currentLevel = 'level_1'
         self.camera = Camera(self.board.startPosition[0], self.board.startPosition[1])
 
         # Create sprite groups for all tiles, enemies and walls
@@ -58,7 +63,7 @@ class Game():
     # Used to load a new level
     def loadLevel(self, levelName):
 
-        self.board = Board('res/boards/' + levelName + '.txt')
+        self.board = Board('res/boards/' + levelName + '.txt', self.spritesheet)
 
         self.camera.x = self.board.startPosition[0]
         self.camera.y = self.board.startPosition[1]
@@ -66,6 +71,7 @@ class Game():
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
         self.walls = self.findTiles('Wall')
+        self.coins = self.findTiles('Coin')
 
         self.currentLevel = levelName
 
@@ -76,10 +82,10 @@ class Game():
         coinsCollected = self.board.numberOfCoins - self.board.numberOfCoinsLeft()
         self.player.score -= coinsCollected
 
-        self.board = Board('res/boards/' + self.currentLevel + '.txt')
+        self.board = Board('res/boards/' + self.currentLevel + '.txt', self.spritesheet)
 
-        self.camera.x = 50
-        self.camera.y = 200
+        self.camera.x = self.board.startPosition[0]
+        self.camera.y = self.board.startPosition[1]
 
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
@@ -98,16 +104,17 @@ class Game():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
                     self.camera.changespeed(-4, 0)
-                    self.player.image = self.player.leftImage
+                    self.player.direction = 'left'
                 elif event.key == pygame.K_d:
                     self.camera.changespeed(4, 0)
-                    self.player.image = self.player.rightImage
+                    self.player.direction = 'right'
+                    #self.player.image = self.player.rightImage
                 elif event.key == pygame.K_w:
                     self.camera.changespeed(0, -4)
-                    self.player.image = self.player.backImage
+                    #self.player.image = self.player.backImage
                 elif event.key == pygame.K_s:
                     self.camera.changespeed(0, 4)
-                    self.player.image = self.player.frontImage
+                    #self.player.image = self.player.frontImage
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
@@ -127,6 +134,7 @@ class Game():
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies.update(self.walls, self.player, self.camera)
         self.coins.update()
+        self.playerGroup.update(self.camera)
 
         newLevel = self.camera.update(self.player, self.tiles)
 

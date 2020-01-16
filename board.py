@@ -5,14 +5,13 @@ from sprites.walls import *
 from sprites.coin import Coin
 from sprites.enemy import Enemy
 from sprites.level_loader import LevelLoader
-from spritesheet import Spritesheet
 
 class Board():
 
-    def __init__(self, path):
+    def __init__(self, path, spritesheet):
         self.board = self.readBoardFromFile(path)
         self.level = int(path[-5])
-        self.spritesheet = Spritesheet("res/sprites/spritesheet.png")
+        self.spritesheet = spritesheet
         self.numberOfCoins = 0
         self.startPosition = (0, 0)
         self.worldView = self.generateWorldView()
