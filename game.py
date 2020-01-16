@@ -1,3 +1,5 @@
+import time as pyTime
+
 from pygame import *
 from pygame.sprite import *
 
@@ -37,18 +39,20 @@ class Game():
         self.currentLevel = 'level_1'
         self.camera = Camera(self.board.startPosition[0], self.board.startPosition[1])
 
+        self.level0_collected_coins = []
+        self.level1_collected_coins = []
+        self.level2_collected_coins = []
+        self.level3_collected_coins = []
+
         # Create sprite groups for all tiles, enemies and walls
         self.tiles = self.board.generateScreenView(self.camera.x, self.camera.y)
         self.enemies = self.findTiles('Enemy')
         self.walls = self.findTiles('Wall')
-        self.coins = self.findTiles('Coin')
-
-        # Create camera, must be done after board.generateScreenView has been called
-        
+        self.coins = self.findTiles('Coin')   
 
         # Set running to True and start the game
         self.running = True
-        self.run()
+        self.run()    
 
     # Return a group of tiles that match a given type
     def findTiles(self, tileType):
@@ -65,6 +69,16 @@ class Game():
 
         self.board = Board('res/boards/' + levelName + '.txt', self.spritesheet)
 
+        # Remove any coins already collected when returning
+        if levelName == 'level_0':
+            self.board.removeCoins(self.level0_collected_coins)
+        elif levelName == 'level_1':
+            self.board.removeCoins(self.level1_collected_coins)
+        elif levelName == 'level_2':
+            self.board.removeCoins(self.level2_collected_coins)
+        elif levelName == 'level_3':
+            self.board.removeCoins(self.level3_collected_coins)
+
         self.camera.x = self.board.startPosition[0]
         self.camera.y = self.board.startPosition[1]
 
@@ -77,6 +91,8 @@ class Game():
 
     # Used to restart a level
     def restartLevel(self):
+
+        pyTime.sleep(0.7)
 
         # Find how many coins were collected and subtract this from the players score
         coinsCollected = self.board.numberOfCoins - self.board.numberOfCoinsLeft()
@@ -126,6 +142,10 @@ class Game():
                 elif event.key == pygame.K_s:
                     self.camera.changespeed(0, -4)
 
+    def addPositions(self, master, positions):
+        for position in positions:
+            master.append(position)
+
     # Called every game loop
     # Call the update on sprite groups
     def update(self):
@@ -136,7 +156,18 @@ class Game():
         self.coins.update()
         self.playerGroup.update(self.camera)
 
-        newLevel = self.camera.update(self.player, self.tiles)
+        newLevel, collected_coin_locations = self.camera.update(self.player, self.tiles)
+
+        if self.currentLevel == 'level_0':
+            self.addPositions(self.level0_collected_coins, collected_coin_locations)
+        elif self.currentLevel == 'level_1':
+            self.addPositions(self.level1_collected_coins, collected_coin_locations)
+        elif self.currentLevel == 'level_2':
+            self.addPositions(self.level2_collected_coins, collected_coin_locations)
+        elif self.currentLevel == 'level_3':
+            self.addPositions(self.level3_collected_coins, collected_coin_locations)
+
+        
 
         if newLevel != '':
             self.loadLevel(newLevel)
@@ -145,7 +176,7 @@ class Game():
             self.restartLevel()
             self.player.enemyCollision = False
 
-        self.text = self.font.render('Score: ' + str(self.player.score), True, (255,0,0))
+        self.text = self.font.render('Score: ' + str(self.player.score), True, (255,255,255))
         self.textRect = self.text.get_rect()
         self.textRect.x = 0
         self.textRect.y = 0
@@ -173,5 +204,7 @@ class Game():
 
             self.update()
             self.render()
+
+        
 
 game = Game()

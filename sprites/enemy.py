@@ -111,6 +111,8 @@ class Enemy(Sprite):
 
 
         if player.rect.colliderect(visibleRect):
+            pygame.mixer.music.load('res/sounds/death.mp3')
+            pygame.mixer.music.play()
             player.enemyCollision = True
         
         self.animate(10)

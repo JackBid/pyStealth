@@ -18,6 +18,8 @@ class Camera:
 
     def update(self, player, tiles):
 
+        collected_coin_locations = []
+
         tempRect = Rect(380 + self.dx, 280 + self.dy, 28, 40)
 
 
@@ -31,8 +33,11 @@ class Camera:
                 if type(tile).__name__ == 'Wall':
                     wallCollision = True
                 elif type(tile).__name__ == 'Coin':
+                    collected_coin_locations.append((tile.worldX, tile.worldY))
+                    pygame.mixer.music.load('res/sounds/coin.mp3')
+                    pygame.mixer.music.play()
                     player.score += 1
-                    tile.kill()
+                    tile.kill() 
                 elif type(tile).__name__ == 'LevelLoader':
                     newLevel = 'level_' + str(tile.levelToLoad)
 
@@ -47,6 +52,9 @@ class Camera:
                 if type(tile).__name__ == 'Wall':
                     wallCollision = True
                 elif type(tile).__name__ == 'Coin':
+                    collected_coin_locations.append((tile.worldX, tile.worldY))
+                    pygame.mixer.music.load('res/sounds/coin.mp3')
+                    pygame.mixer.music.play()
                     player.score += 1
                     tile.kill()
                 elif type(tile).__name__ == 'LevelLoader':
@@ -55,4 +63,4 @@ class Camera:
         if not wallCollision:
             self.y += self.dy
 
-        return newLevel
+        return newLevel, collected_coin_locations
